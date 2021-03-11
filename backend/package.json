@@ -1,0 +1,25 @@
+{
+  "name": "clientsapp",
+  "version": "0.0.1",
+  "description": "Web app to manage the company clients",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "author": "Juan Ramonda",
+  "license": "ISC",
+  "dependencies": {
+    "connect": "^3.2.0",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "js-yaml": "^3.3.0",
+    "mongoose": "^5.11.15",
+    "morgan": "~1.9.1",
+    "node-sass-middleware": "0.11.0",
+    "oas3-tools": "^2.2.2",
+    "swagger-tools": "^0.10.4",
+    "swagger-ui-express": "^4.1.6"
+  }
+}

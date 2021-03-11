@@ -1,0 +1,846 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Clientsapp API with Swagger",
+		"version": "0.0.1",
+		"description": "Clientapp application API documentation with Swagger",
+		"license": {
+			"name": "MIT",
+			"url": "https://spdx.org/licenses/MIT.html"
+		},
+		"contact": {
+			"name": "Juan Ramonda",
+			"email": "juanpr@gmail.com"
+		}
+	},
+	"servers": [{
+		"url": "http://localhost:5000/",
+		"description": "Development server"
+	}],
+	"tags": [{
+			"name": "Client",
+			"description": "Client operations"
+		},
+		{
+			"name": "Provider",
+			"description": "Provider operations"
+		}
+	],
+	"paths": {
+		"/clients/": {
+			"get": {
+				"tags": [
+					"Client"
+				],
+				"description": "Returns all clients from the system",
+				"responses": {
+					"200": {
+						"description": "A list of clients",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Client"
+									}
+								},
+								"examples": {
+									"clients list": {
+										"$ref": "#/components/examples/ClientsList"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"server error": {
+										"$ref": "#/components/examples/ErrorModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Client"
+				],
+				"description": "Creates a new client",
+				"requestBody": {
+					"description": "Client to create",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ClientData"
+							},
+							"examples": {
+								"client": {
+									"$ref": "#/components/examples/ClientData"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The created client with its ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Client"
+								},
+								"examples": {
+									"new client": {
+										"$ref": "#/components/examples/Client"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"server error": {
+										"$ref": "#/components/examples/ErrorModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/clients/{clientId}/": {
+			"put": {
+				"tags": [
+					"Client"
+				],
+				"description": "Updates a client",
+				"requestBody": {
+					"description": "Client to update",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ClientData"
+							},
+							"examples": {
+								"client": {
+									"$ref": "#/components/examples/ClientData"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The operation result",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OperationResult"
+								},
+								"examples": {
+									"operation result": {
+										"$ref": "#/components/examples/OperationResult"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Client not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"client not found": {
+										"$ref": "#/components/examples/ErrorClientNotFound"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"server error": {
+										"$ref": "#/components/examples/ErrorModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"Client"
+				],
+				"description": "Deletes a client",
+				"responses": {
+					"200": {
+						"description": "The operation result",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OperationResult"
+								},
+								"examples": {
+									"operation result": {
+										"$ref": "#/components/examples/OperationResult"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Client not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"client not found": {
+										"$ref": "#/components/examples/ErrorClientNotFound"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"server error": {
+										"$ref": "#/components/examples/ErrorModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"parameters": [{
+				"name": "clientId",
+				"in": "path",
+				"description": "Client's ID to use",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"style": "simple"
+			}]
+		},
+		"/providers/": {
+			"get": {
+				"tags": [
+					"Provider"
+				],
+				"description": "Returns all providers from the system",
+				"responses": {
+					"200": {
+						"description": "A list of providers",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Provider"
+									}
+								},
+								"examples": {
+									"clients list": {
+										"$ref": "#/components/examples/ProvidersList"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"server error": {
+										"$ref": "#/components/examples/ErrorModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Provider"
+				],
+				"description": "Creates a new provider",
+				"requestBody": {
+					"description": "Provider to create",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ProviderData"
+							},
+							"examples": {
+								"client": {
+									"$ref": "#/components/examples/ProviderData"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The created client with its ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Provider"
+								},
+								"examples": {
+									"new client": {
+										"$ref": "#/components/examples/Provider"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"server error": {
+										"$ref": "#/components/examples/ErrorModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/providers/{providerId}/": {
+			"delete": {
+				"tags": [
+					"Provider"
+				],
+				"description": "Deletes a provider",
+				"responses": {
+					"200": {
+						"description": "The operation result",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OperationResult"
+								},
+								"examples": {
+									"operation result": {
+										"$ref": "#/components/examples/OperationResult"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Provider not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"client not found": {
+										"$ref": "#/components/examples/ErrorProviderNotFound"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"server error": {
+										"$ref": "#/components/examples/ErrorModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"parameters": [{
+				"name": "providerId",
+				"in": "path",
+				"description": "Provider's ID to use",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"style": "simple"
+			}]
+		},
+		"/providersbyclient/{clientId}/": {
+			"get": {
+				"tags": [
+					"Provider"
+				],
+				"description": "Gets the client's providers",
+				"responses": {
+					"200": {
+						"description": "The providers IDs list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+									    "$ref": "#/components/schemas/IdentifiableEntity"
+									}
+								},
+								"examples": {
+									"client": {
+										"$ref": "#/components/examples/ProvidersIdsList"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Client not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"client not found": {
+										"$ref": "#/components/examples/ErrorClientNotFound"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"server error": {
+										"$ref": "#/components/examples/ErrorModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"Provider"
+				],
+				"description": "Updates a client's providers list",
+				"requestBody": {
+					"description": "Client's providers Ids",
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "array",
+								"items": {
+										"$ref": "#/components/schemas/IdentifiableEntity"
+								}
+							},
+							"examples": {
+								"providers": {
+									"$ref": "#/components/examples/ProvidersIdsList"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "The operation result",
+						"content": {
+							"application/json": {
+								"schema": {
+								  "$ref": "#/components/schemas/OperationResult"
+								},
+								"examples": {
+									"operation result": {
+										"$ref": "#/components/examples/OperationResult"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"client not found": {
+										"$ref": "#/components/examples/ErrorClientNotFound"
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"server error": {
+										"$ref": "#/components/examples/ErrorModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"parameters": [{
+				"name": "clientId",
+				"in": "path",
+				"description": "Client's ID to use",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"style": "simple"
+			}]
+		},
+		"/clientsbyprovider/{providerId}/": {
+			"get": {
+				"tags": [
+					"Provider"
+				],
+				"description": "Gets the number of clients who have this provider",
+				"responses": {
+					"200": {
+						"description": "The number of clients who have this provider",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+									    "clients": {
+									      "type": "number"
+									    }
+									}
+								},
+								"examples": {
+									"clients": {
+										"summary": "Number of clients response example",
+										"value": {
+										  "clients": 100
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorModel"
+								},
+								"examples": {
+									"server error": {
+										"$ref": "#/components/examples/ErrorModel"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"parameters": [{
+				"name": "providerId",
+				"in": "path",
+				"description": "Provider's ID to use",
+				"required": true,
+				"schema": {
+					"type": "string"
+				},
+				"style": "simple"
+			}]
+		}
+	},
+	"components": {
+		"schemas": {
+			"ClientData": {
+				"type": "object",
+				"required": [
+					"name", "email", "phone"
+				],
+				"properties": {
+					"name": {
+						"description": "Client's name",
+						"type": "string"
+					},
+					"email": {
+						"description": "Client's email",
+						"type": "string"
+					},
+					"phone": {
+						"description": "Client's phone number",
+						"type": "string"
+					}
+				}
+			},
+			"ProviderData": {
+				"type": "object",
+				"required": [
+					"name"
+				],
+				"properties": {
+					"name": {
+						"description": "Provider's name",
+						"type": "string"
+					}
+				}
+			},
+			"Provider": {
+				"description": "Identifiable provider",
+				"type": "object",
+				"required": [
+					"id", "name"
+				],
+				"properties": {
+					"id": {
+						"description": "Provider ID.",
+						"type": "string"
+					},
+					"name": {
+						"description": "Provider's name",
+						"type": "string"
+					}
+				}
+			},
+			"Client": {
+				"description": "Identifiable client",
+				"type": "object",
+				"required": [
+					"id", "name", "email", "phone"
+				],
+				"properties": {
+					"id": {
+						"description": "Client ID.",
+						"type": "string"
+					},
+					"name": {
+						"description": "Client's name",
+						"type": "string"
+					},
+					"email": {
+						"description": "Client's email",
+						"type": "string"
+					},
+					"phone": {
+						"description": "Client's phone number",
+						"type": "string"
+					}
+				}
+			},
+			"IdentifiableEntity": {
+				"type": "object",
+				"required": [
+					"id"
+				],
+				"properties": {
+					"id": {
+						"description": "Entity ID",
+						"type": "string"
+					}
+				}
+			},
+			"OperationResult": {
+			  "type": "object",
+				"required": [
+					"result"
+				],
+				"properties": {
+					"result": {
+						"description": "Operation result",
+						"type": "string"
+					},
+					"affectedNumber": {
+						"description": "Number of documents affected by the operation",
+						"type": "number"
+					}
+				}
+			},
+			"ErrorModel": {
+				"type": "object",
+				"required": [
+					"message",
+					"code"
+				],
+				"properties": {
+					"message": {
+						"description": "Error message",
+						"type": "string"
+					},
+					"code": {
+						"description": "Error code",
+						"type": "integer"
+					}
+				}
+			}
+		},
+		"examples": {
+			"ClientData": {
+				"summary": "New client example",
+				"value": {
+					"name": "John",
+					"email": "john@gmail.com",
+					"phone": "305000157"
+				}
+
+			},
+			"Client": {
+				"summary": "Client example",
+				"value": {
+					"id": "10",
+					"name": "John",
+					"email": "john@gmail.com",
+					"phone": "305000157"
+				}
+			},
+			"ClientsList": {
+				"summary": "Clients list example",
+				"value": [{
+						"id": "10",
+						"name": "John",
+						"email": "john@gmail.com",
+						"phone": "305000157"
+					},
+					{
+						"id": "11",
+						"name": "Paul",
+						"email": "paul@gmail.com",
+						"phone": "305000158"
+					}
+				]
+			},
+			"ProviderData": {
+				"summary": "New provider example",
+				"value": {
+					"name": "Provider 1"
+				}
+			},
+			"Provider": {
+				"summary": "Provider example",
+				"value": {
+					"id": "1",
+					"name": "Provider 1"
+				}
+			},
+			"ProvidersList": {
+				"summary": "Providers list example",
+				"value": [{
+						"id": "1",
+						"name": "Provider 1"
+					},
+					{
+						"id": "2",
+						"name": "Provider 2"
+					}
+				]
+			},
+			"ProvidersIdsList": {
+				"summary": "Providers IDs list example",
+				"value": [{
+						"id": "1"
+					},
+					{
+						"id": "2"
+					}
+				]
+			},
+			"OperationResult": {
+  			"summary": "Operation result example",
+				"value": {
+					"result": "OK",
+					"affectedNumber": 1
+				}
+			},
+			"ErrorModel": {
+				"summary": "Error model example",
+				"value": {
+					"message": "Error connecting with database",
+					"code": 5000
+				}
+			},
+			"ErrorClientNotFound": {
+				"summary": "Client not found error example",
+				"value": {
+					"message": "Client not found",
+					"code": 4040
+				}
+			},
+			"ErrorProviderNotFound": {
+				"summary": "Provider not found error example",
+				"value": {
+					"message": "Provider not found",
+					"code": 4041
+				}
+			},
+			"IdentifiableEntity": {
+				"summary": "Identifiable entity example",
+				"value": {
+					"id": "10"
+				}
+			}
+		}
+	}
+}

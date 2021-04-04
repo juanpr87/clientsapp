@@ -50,7 +50,7 @@ exports.providersbyclientClientIdGET = function(clientId) {
  **/
 exports.providersbyclientClientIdPUT = function(body,clientId) {
   return new Promise(function(resolve, reject) {
-    providerDao.updateProviders(clientId, body, function(err, result) {
+    providerDao.updateProviders(clientId, body.providers, function(err, result) {
       if (err != null) {
           reject(utils.respondWithCode(500, {
             code: 5000,
@@ -145,6 +145,44 @@ exports.providersProviderIdDELETE = function(providerId) {
         } else if (result.ok == 1 && result.deletedCount == 0) {
           reject(utils.respondWithCode(404, {
             message: "Provider not found",
+            code: 4040
+          }));
+        } else if (result.ok == 0) {
+          reject(utils.respondWithCode(500, {
+            message: "Error occurred in DB operation",
+            code: 5001
+          }));
+        }
+      }
+    });
+  });
+}
+
+/**
+ * Updates a provider
+ *
+ * body ProviderData Provider to update (optional)
+ * providerId String Provider's ID to use
+ * returns OperationResult
+ **/
+exports.providersProviderIdPUT = function(body,providerId) {
+  return new Promise(function(resolve, reject) {
+    providerDao.updateProvider(body, providerId, function(err, result) {
+      if (err != null) {
+        reject(utils.respondWithCode(500, {
+          code: 5000,
+          message: err.message
+        }));
+      } else {
+        if (result.ok == 1 && result.n == 1) {
+          // Operation OK
+          resolve({
+            result: 'OK',
+            affectedNumber: result.nModified
+          });
+        } else if (result.ok == 1 && result.n == 0) {
+          reject(utils.respondWithCode(404, {
+            message: "Client not found",
             code: 4040
           }));
         } else if (result.ok == 0) {

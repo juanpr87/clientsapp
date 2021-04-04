@@ -33,6 +33,16 @@ module.exports.providersProviderIdDELETE = function providersProviderIdDELETE (r
     });
 };
 
+module.exports.providersProviderIdPUT = function providersProviderIdPUT (req, res, next, body, providerId) {
+  Provider.providersProviderIdPUT(body, providerId)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
+
 module.exports.providersbyclientClientIdGET = function providersbyclientClientIdGET (req, res, next, clientId) {
   Provider.providersbyclientClientIdGET(clientId)
     .then(function (response) {

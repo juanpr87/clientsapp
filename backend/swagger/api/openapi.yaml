@@ -241,6 +241,58 @@ paths:
                   $ref: '#/components/examples/ErrorModel'
       x-swagger-router-controller: Provider
   /providers/{providerId}/:
+    put:
+      tags:
+      - Provider
+      description: Updates a provider
+      operationId: providersProviderIdPUT
+      parameters:
+      - name: providerId
+        in: path
+        description: Provider's ID to use
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Provider to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderData'
+            examples:
+              client:
+                $ref: '#/components/examples/ProviderData'
+      responses:
+        "200":
+          description: The operation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResult'
+              examples:
+                operation result:
+                  $ref: '#/components/examples/OperationResult'
+        "404":
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              examples:
+                client not found:
+                  $ref: '#/components/examples/ErrorClientNotFound'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+              examples:
+                server error:
+                  $ref: '#/components/examples/ErrorModel'
+      x-swagger-router-controller: Provider
     delete:
       tags:
       - Provider
@@ -350,12 +402,10 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/IdentifiableEntity'
+              $ref: '#/components/schemas/body'
             examples:
               providers:
-                $ref: '#/components/examples/ProvidersIdsList'
+                $ref: '#/components/examples/ObjectProvidersIdsList'
       responses:
         "200":
           description: The operation result
@@ -526,6 +576,13 @@ components:
         code:
           type: integer
           description: Error code
+    body:
+      type: object
+      properties:
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentifiableEntity'
     inline_response_200:
       type: object
       properties:
@@ -579,6 +636,12 @@ components:
       value:
       - id: "1"
       - id: "2"
+    ObjectProvidersIdsList:
+      summary: Object providers IDs list example
+      value:
+        providers:
+        - id: "1"
+        - id: "2"
     OperationResult:
       summary: Operation result example
       value:

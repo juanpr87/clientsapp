@@ -2,6 +2,8 @@
 
 const debug = require('debug')('clientsapp:server');
 
+const mongoose = require('mongoose');
+
 // Mongoose connection
 const connection = require('./connection');
 // Mongoose models
@@ -95,7 +97,7 @@ module.exports.insertClient = function(client, callback) {
 
 /**
   * Updates a client
-  * @param client client object to insert (property id, if exists, will be ignored)
+  * @param client client object to update (property id, if exists, will be ignored)
   * @param clientId ID whose client will be updated
   * @param callback function which takes 2 params:
   *   - err error object
@@ -112,21 +114,27 @@ module.exports.updateClient = function(client, clientId, callback) {
 
     debug('Updating Client document...');
     const Client = models.models().Client;
-    const clientModel = new Client({
-      _id: clientId,
-      name: client.name,
-      email: client.email,
-      phone: client.phone
-    });
-    clientModel.updateOne(clientModel, function(err, result) {
-      if (err) {
-        console.error('Error while saving Client document: ', err);
-        callback(err);
-      } else {
-        debug('Saving result: %o', result);
-        callback(null, result);
-      }
-    });
+    Client.updateOne(
+	    {
+        _id: mongoose.Types.ObjectId(clientId)
+      },
+      {
+      	$set: {
+      		name: client.name,
+		      email: client.email,
+		      phone: client.phone
+      	}
+      },
+    	function(err, result) {
+			  if (err) {
+			    console.error('Error while saving Client document: ', err);
+			    callback(err);
+			  } else {
+			    debug('Saving result: %o', result);
+			    callback(null, result);
+			  }
+			}
+		);
   });
 }
 

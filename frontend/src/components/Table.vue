@@ -10,12 +10,17 @@
       </template>
       <!-- A custom formatted column -->
       <template #cell(edit)="data">
-        <b-button variant="link" @click="onEditClient(data.item)">Edit</b-button>
+        <b-button class="mr-2" size="sm" variant="link" @click="onEditClient(data.item)">Edit</b-button>
       </template>
 
       <!-- A custom formatted column -->
       <template #cell(delete)="data">
-        <b-button variant="link" @click="onRemoveClient(data.item)">Delete</b-button>
+        <b-button class="mr-2" size="sm" variant="link" @click="onRemoveClient(data.item)">Delete</b-button>
+      </template>
+
+      <!-- Optional default data cell scoped slot -->
+      <template #cell()="data">
+        <span class="table-cell">{{ data.value }}</span>
       </template>
 
       <template #table-caption>{{ captionMsg }}.</template>
@@ -66,5 +71,10 @@ export default Vue.component('Table', {
 <style scoped lang="scss">
 a {
   color: #42b983;
+}
+.table-cell {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 </style>

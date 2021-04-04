@@ -41,41 +41,83 @@
             required>
           </b-form-input>
         </b-form-group>
-        <b-form-group
-        id="input-group-providers"
-        label="Providers:"
-        label-for="checkbox-group"
-        description="Please select the providers for this client.">
-          <b-list-group label="Providers:">
-            <b-form-checkbox-group
-              id="checkbox-group"
-              v-model="providersChecks"
-              name="checkbox-1">
-              <b-list-group-item v-for="provider in providers" :key="provider.id">
-                <b-form-checkbox
-                  :value="provider.id">
-                  {{ provider.name }}
-                </b-form-checkbox>
-              </b-list-group-item>
-            </b-form-checkbox-group>
-          </b-list-group>
-        </b-form-group>
+        <b-card bg-variant="light">
+          <b-form-group
+            label="Providers"
+            label-size="lg"
+            class="mb-0">
+            <b-form-group
+              id="input-group-newprovider"
+              label="New provider:"
+              label-for="input-newprovider"
+              description="Please enter a provider name.">
+              <b-input-group>
+                <b-form-input
+                  id="input-newprovider"
+                  v-model="newProvider"
+                  type="text"
+                  placeholder="Enter name">
+                </b-form-input>
+                <b-input-group-append>
+                  <b-button variant="primary" @click="onSubmitNewProvider">Add provider</b-button>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group
+            id="input-group-providers"
+            label="Providers:"
+            label-for="checkbox-group"
+            description="Please select the providers for this client.">
+              <b-list-group label="Providers:">
+                <b-form-checkbox-group
+                  id="checkbox-group"
+                  v-model="providersChecks"
+                  name="checkbox-1">
+                  <b-list-group-item v-for="provider in providers" :key="provider.id">
+                    <div class="d-flex flex-row justify-content-between">
+                      <b-form-checkbox class="pt-1"
+                        :value="provider.id">
+                        {{ provider.name }}
+                      </b-form-checkbox>
+                      <b-button-group>
+                        <b-button v-b-modal.modal-multi-2 variant="light" size="sm" @click="onEditProvider(provider)">
+                          <b-icon-pencil-square></b-icon-pencil-square>
+                        </b-button>
+                        <b-button v-b-modal.modal-multi-2 variant="light" size="sm" @click="onDeleteProvider(provider)">
+                          <b-icon-trash></b-icon-trash>
+                        </b-button>
+                      </b-button-group>
+                    </div>
+                  </b-list-group-item>
+                </b-form-checkbox-group>
+              </b-list-group>
+            </b-form-group>
+          </b-form-group>
+        </b-card>
         <b-button type="submit" variant="primary">Submit</b-button>
         <b-button type="reset" variant="danger">Reset</b-button>
       </b-form>
+      <ProviderModal v-model="providerModalShow" :provider="providerToEdit" @submit="onSubmitEditProvider"></ProviderModal>
     </div>
   </b-modal>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import { IdentifiableEntity } from '../api/models'
+import { IdentifiableEntity, Provider } from '../api/models'
+import ProviderModal from './ProviderModal.vue'
 
 export default Vue.component('ClientModal', {
+  components: {
+    ProviderModal
+  },
   data () {
     return {
       modalShow: false,
+      providerModalShow: false,
       providersChecks: [] as Array<string>,
+      providerToEdit: null as Provider | null,
+      newProvider: '',
       form: {
         email: '',
         name: '',
@@ -106,15 +148,33 @@ export default Vue.component('ClientModal', {
       console.log('onReset')
       console.log(this.providersChecks)
       console.log(this.providers)
+    },
+    onDeleteProvider (provider: Provider) {
+      if (provider) {
+        this.$emit('deleteProvider', provider)
+      }
+    },
+    onEditProvider (provider: Provider) {
+      this.providerToEdit = provider
+      this.providerModalShow = true
+    },
+    onSubmitNewProvider () {
+      if (this.newProvider && this.newProvider.length > 0) {
+        this.$emit('addProvider', this.newProvider)
+        this.newProvider = ''
+      }
+    },
+    onSubmitEditProvider (provider: Provider) {
+      this.providerToEdit = null
+      this.$emit('editProvider', provider)
     }
   },
   computed: {
     title (): string {
       if (this.client) {
         return `Edit client ${this.client.name}`
-      } else {
-        return 'New client'
       }
+      return 'New client'
     }
   },
   watch: {
@@ -134,11 +194,14 @@ export default Vue.component('ClientModal', {
     },
     // Triggered if the client clicks on 'Edit' button from a table row
     client: function (client) {
-      console.log('Client watcher ', client)
       if (client && client.id) {
         this.form.email = client.email
         this.form.name = client.name
         this.form.phone = client.phone
+      } else {
+        this.form.email = ''
+        this.form.name = ''
+        this.form.phone = ''
       }
     },
     // Triggered in the same way as client

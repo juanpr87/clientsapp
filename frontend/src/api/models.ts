@@ -1,9 +1,11 @@
-export interface Provider {
+export interface IdentifiableEntity {
   /**
-   * Provider's Id
+   * Entity's Id
    **/
   id: string;
+}
 
+export interface ProviderData {
   /**
    * Provider's name
    **/
@@ -27,16 +29,15 @@ export interface ClientData {
   phone: string;
 }
 
-export interface Client extends ClientData {
-    /**
-     * Client's Id
-     **/
-    id: string;
+export interface Provider extends ProviderData, IdentifiableEntity {
 }
 
-export interface IdentifiableEntity {
+export interface Client extends ClientData, IdentifiableEntity {
+}
+
+export interface ProvidersList {
   /**
-   * Entity's Id
+   * Providers list
    **/
-  id: string;
+  providers: Array<IdentifiableEntity>
 }

@@ -197,102 +197,44 @@ const deleteProviderRefs = function(providerId, callback) {
 }
 
 /**
-  * Adds the providerIds to the providers list of the client whose Id is clientId
-  * If a providerId already exists, it will not add it again.
-  * @param clientId Id of the client whose providers list will be updated
-  * @param providerIds array of object such as { id: providerId } which will be 
-  * added to the clients providers property
-  * @param callback callback which takes 2 params
-  *   - the first is an error object (null if the operation was ok)
-  *   - the second is the result object
-  * https://docs.mongodb.com/manual/reference/operator/update/addToSet/
-  * https://docs.mongodb.com/manual/reference/operator/update/addToSet/#addtoset-modifiers
- **/
-module.exports.addProvidersToClient = function(clientId, providerIds, callback) {
-  if (providerIds == null || providerIds.length == 0) {
-    debug('addProvidersToClient with nothing to add. Returning...');
-    return {
-      ok: 1,
-      n: 1,
-      nModified: 0
-    }
-  }
-  const providerObjectIds = [];
-  for (const id of providerIds) {
-    providerObjectIds.push(mongoose.Types.ObjectId(id.id))
-  };
+  * Updates a provider
+  * @param provider provider object to update (property id, if exists, will be ignored)
+  * @param providerId ID whose provider will be updated
+  * @param callback function which takes 2 params:
+  *   - err error object
+  *   - client updated object
+  **/
+module.exports.updateProvider = function(provider, providerId, callback) {
   debug('Connecting to DB...');
   connection.connect(function(err, connection) {
-    if (err != null) {
+    if (err != undefined) {
       console.error('Error connecting to DB: ', err);
       callback(err);
       return;
     }
-    
-    debug('Adding Providers to a Client...');
-    const Client = models.models().Client;
-    Client.updateOne(
-      {
-        _id: mongoose.Types.ObjectId(clientId)
-      },
-      {
-        $addToSet: {
-          providers: { $each: providerObjectIds }
-        }
-      },
-      function(err, result) {
-        if (err != null) {
-          console.error('Clients AddProviders Update err: ', err);
-          callback(err);
-        } else {
-          debug('Clients AddProviders Update result: %o', result);
-          callback(null, result);
-        }
-      }
-    );
-  });
-}
 
-/**
-  * Removes the providerId from the providers list of the client whose Id is clientId.
-  * If the providerId did not exist, it will return nModified: 0 in result.
-  * @param clientId Id of the client whose providers list will be updated
-  * @param providerId providerId to be removed from the clients providers property
-  * @param callback callback which takes 2 params
-  *   - the first is an error object (null if the operation was ok)
-  *   - the second is the result object
-  * https://docs.mongodb.com/manual/reference/operator/update/pull/
- **/
-module.exports.removeProviderFromClient = function(clientId, providerId, callback) {
-  debug('Connecting to DB...');
-  connection.connect(function(err, connection) {
-    if (err != null) {
-      console.error('Error connecting to DB: ', err);
-      callback(err);
-      return;
-    }
+    debug('Updating Provider document...');
+    const Provider = models.models().Provider;
     
-    debug('Removing a Provider from a Client providers list...');
-    const Client = models.models().Client;
-    Client.updateOne(
-      {
-        _id: mongoose.Types.ObjectId(clientId)
+    Provider.updateOne(
+	    {
+        _id: mongoose.Types.ObjectId(providerId)
       },
       {
-        $pull: {
-          providers: mongoose.Types.ObjectId(providerId)
-        }
+      	$set: {
+      		name: provider.name
+      	}
       },
-      function(err, result) {
-        if (err != null) {
-          console.error('Clients RemoveProvider Update err: ', err);
-          callback(err);
-        } else {
-          debug('Clients RemoveProvider Update result: %o', result);
-          callback(null, result);
-        }
-      }
-    );
+    	function(err, result) {
+			  if (err) {
+			    console.error('Error while saving Provider document: ', err);
+			    callback(err);
+			  } else {
+			    debug('Saving result: %o', result);
+			    callback(null, result);
+			  }
+			}
+		);
   });
 }
 
@@ -305,21 +247,14 @@ module.exports.removeProviderFromClient = function(clientId, providerId, callbac
   *   - client updated object
   **/
 module.exports.updateProviders = function(clientId, providerIds, callback) {
-  if (providerIds == null || providerIds.length == 0) {
-    debug('addProvidersToClient with nothing to add. Returning...');
-    return {
-      ok: 1,
-      n: 1,
-      nModified: 0
-    }
+  if (providerIds == null) {
+    providerIds = [];
   }
   const providerObjectIds = [];
   for (const id of providerIds) {
     providerObjectIds.push(mongoose.Types.ObjectId(id.id))
   };
   debug('Connecting to DB...');
-  console.log('clientId: ', clientId);
-  console.log('providers: ', providerObjectIds);
   connection.connect(function(err, connection) {
     if (err != undefined) {
       console.error('Error connecting to DB: ', err);
